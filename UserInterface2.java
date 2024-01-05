@@ -18,16 +18,18 @@ import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JScrollPane;
+import java.awt.Color;
 
 
 public class UserInterface2 extends JFrame {
 
-	
+	private static UserInterface userInterface;
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTable table;
 	private JTable table_1;
-	private JTextField textFieldBenutzer;
+	public JTextField textFieldBenutzer;
+	
 
 	/**
 	 * Launch the application.
@@ -36,30 +38,45 @@ public class UserInterface2 extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					UserInterface2 frame = new UserInterface2();
+					UserInterface2 frame = new UserInterface2(userInterface);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
+					
 				}}});}
 
 	/**
 	 * Create the frame.
 	 */
-	public UserInterface2() {
+	public UserInterface2(UserInterface userInterface) {
+		this.userInterface=userInterface;
 		setTitle("SelectPage");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 652, 462);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
+		
+		//text Field that shows the username//
+		textFieldBenutzer = new JTextField();
+		textFieldBenutzer.setEnabled(false);
+		textFieldBenutzer.setBackground(new Color(255, 255, 255));
+		textFieldBenutzer.setSelectionColor(new Color(0, 0, 0));
+		textFieldBenutzer.setForeground(new Color(119, 136, 153));
+		textFieldBenutzer.setFont(new Font("Century", Font.BOLD, 11));
+		textFieldBenutzer.setHorizontalAlignment(SwingConstants.CENTER);
+		textFieldBenutzer.setEditable(false);
+		textFieldBenutzer.setBounds(38, 11, 96, 20);
+		contentPane.add(textFieldBenutzer);
+		textFieldBenutzer.setColumns(10);
+		
 		
 		//Label Products Overview//
 		JLabel lblProductsOverview = new JLabel("Products Overview");
 		lblProductsOverview.setFont(new Font("Century", Font.PLAIN, 12));
 		lblProductsOverview.setHorizontalAlignment(SwingConstants.CENTER);
-		lblProductsOverview.setBounds(10, 11, 615, 28);
+		lblProductsOverview.setBounds(20, 39, 615, 28);
 		contentPane.add(lblProductsOverview);
 		
 		//Table where all the Products with corresponding price per 100g are listed//		
@@ -83,12 +100,12 @@ public class UserInterface2 extends JFrame {
 				return columnTypes[columnIndex];
 			}
 		});
-		table.setBounds(170, 50, 300, 64);
+		table.setBounds(176, 66, 300, 64);
 		contentPane.add(table);
 		
 		
 		//Selection of Products by Kunden//
-		JComboBox <String> Products = new JComboBox <String>();
+		final JComboBox <String> Products = new JComboBox <String>();
 		Products.setBounds(38, 171, 179, 28);
 		contentPane.add(Products);
 		Products.addItem("Select Products");
@@ -103,7 +120,7 @@ public class UserInterface2 extends JFrame {
 		
 		
 	    //Typing of desired Anzahl by Kunden//
-		JTextField textFieldAnzahl = new JTextField();
+		final JTextField textFieldAnzahl = new JTextField();
 		textFieldAnzahl.setBounds(121, 220, 96, 20);
 		contentPane.add(textFieldAnzahl);
 		textFieldAnzahl.setColumns(10);
@@ -116,7 +133,7 @@ public class UserInterface2 extends JFrame {
 		
 		//Table where all the selected Items are listed//
 		table_1 = new JTable();
-		DefaultTableModel model1 = new DefaultTableModel();
+		final DefaultTableModel model1 = new DefaultTableModel();
 		model1.addColumn("Products");
 		model1.addColumn("Anzahl [g]");
 				
@@ -154,7 +171,7 @@ public class UserInterface2 extends JFrame {
 				
 				//Pop-Up Window to show products removed from Warenkorb//
 				Component frame=null;
-				{JOptionPane.showMessageDialog(frame,anzahl+ "g" +" "+ products+ " "+"removed from Warenkorb");
+				JOptionPane.showMessageDialog(frame,anzahl+ "g" +" "+ products+ " "+"removed from Warenkorb");
 				textFieldAnzahl.setText("");
 				
 				//if row selected and undo button is clicked removing from table_1//
@@ -165,7 +182,7 @@ public class UserInterface2 extends JFrame {
 				table_1.revalidate();
 				table_1.repaint();
 			}}
-		}});
+		});
 		
 		btnUndo.setBounds(38, 304, 140, 34);
 		contentPane.add(btnUndo);
@@ -178,14 +195,20 @@ public class UserInterface2 extends JFrame {
 		btnNext.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent e) {
-				//jump to next interface//
-				UserInterface3 userinterface3 = new UserInterface3 (model1);
-				userinterface3.setVisible(true);
 				
-				DefaultTableModel model1=(DefaultTableModel)table_1.getModel();
-				new UserInterface3(model1).setVisible(true);
+				dispose();
+				
+				UserInterface3 frame2=new UserInterface3(model1);
+				frame2.setTextFieldText2(textFieldBenutzer.getText());
+				
+				frame2.setModel(model1);
+				
+				frame2.setVisible(true);
 				
 				
+				frame2.revalidate();
+				frame2.repaint();
+							
 			}});
 		
 		//Zurück Button//
@@ -195,9 +218,22 @@ public class UserInterface2 extends JFrame {
 		
 		btnzurück.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				//resume to userinterface1//
-				UserInterface userinterface = new UserInterface ();
-				userinterface.setVisible(true);
 				
-			}});
-		}}
+				//resume to userinterface1//
+				
+				dispose();
+			
+				
+				UserInterface userInterface = new UserInterface();
+				userInterface.setVisible(true);
+		      
+								
+				}});}
+	
+	public void setTextFieldText(String text) {
+		textFieldBenutzer.setText(text);
+	}
+	}
+			
+		
+		

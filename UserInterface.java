@@ -19,10 +19,14 @@ import java.awt.Font;
 
 public class UserInterface extends JFrame {
 
+	private UserInterface2 frame2; //Reference to the second JFrame
+	private UserInterface3 frame3; //Reference to the third J
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTextField textFieldUsername;
 	private JTextField textFieldPassword;
+	
+	
 
 	/**
 	 * Launch the application.
@@ -31,7 +35,8 @@ public class UserInterface extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					UserInterface frame = new UserInterface();
+					UserInterface2 frame2 = new UserInterface2(null);
+					UserInterface frame = new UserInterface(frame2);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -43,7 +48,12 @@ public class UserInterface extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public UserInterface() {
+	public UserInterface() { //no-argument constructor
+	}
+	
+	
+	public UserInterface(final UserInterface2 frame2) {
+		this.frame2=frame2;
 		setTitle("LoginPage");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 677, 505);
@@ -87,6 +97,8 @@ public class UserInterface extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				String uname=textFieldUsername.getText();
 				String psd=textFieldPassword.getText();
+				
+				
 				//success login only with the correct username and password// 
 				if(uname.equals("BenutzerA")&&psd.equals("A")
 						|| uname.equals("BenutzerB")&& psd.equals("B")
@@ -97,10 +109,11 @@ public class UserInterface extends JFrame {
 	        Component frame=null;
 				{JOptionPane.showMessageDialog(frame,"Welcome" + " " + uname + "!" + " "+ "you are successfully logged in");
 				
-				//Jump to userinterface2//
-				UserInterface2 userinterface2 = new UserInterface2 ();
-				userinterface2.setVisible(true);
 				
+				//Jump to userinterface2//
+				frame2.setTextFieldText(uname); //Set the text in UserInterface2;
+				frame2.setVisible(true);
+								
 			
 				}}
 			
